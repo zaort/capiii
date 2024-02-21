@@ -10,7 +10,7 @@ const AuthenticationError = new GraphQLError("Could not authenticate user.", {
 	},
 });
 
-function authMiddleware({ req }) {
+function authenticationMiddleware({ req }) {
 	let token = req.body.token || req.query.token || req.headers.authorization;
 
 	if (req.headers.authorization) {
@@ -34,8 +34,9 @@ function signToken({ email, username, _id }) {
 	const payload = { email, username, _id };
 	return jwt.sign({ data: payload }, process.env.AUTH_SECRET, { expiresIn: expiration });
 }
+
 export default {
 	AuthenticationError,
-	authMiddleware,
+	authenticationMiddleware,
 	signToken,
 };
