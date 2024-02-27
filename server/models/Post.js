@@ -8,7 +8,7 @@ const postSchema = new Schema(
 		},
 		provider: {
 			type: Schema.Types.ObjectId,
-			ref: "Provider",
+			ref: "User",
 			required: true,
 		},
 		plan: {

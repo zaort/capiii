@@ -16,7 +16,7 @@ const planSchema = new Schema(
 		},
 		provider: {
 			type: Schema.Types.ObjectId,
-			ref: "Provider",
+			ref: "User",
 			required: true,
 		},
 		subscribers: [{ type: Schema.Types.ObjectId, ref: "User" }],

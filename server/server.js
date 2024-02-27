@@ -5,36 +5,36 @@ import { ApolloServer } from "@apollo/server";
 import path from "path";
 import cors from "cors";
 import { expressMiddleware } from "@apollo/server/express4";
-import { authenticationMiddleware } from "./utils/authentication.js";
-// pending to import authMiddleware from authentication.js
-// pending to import typeDefs and resolvers  from schemas
+import auth from "./utils/authentication.js";
+const { signToken, AuthenticationError, authenticationMiddleware } = auth;
+
 import db from "./config/connection.js";
+import { typeDefs, resolvers } from "./schemas/index.js";
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 const server = new ApolloServer({
 	typeDefs,
 	resolvers,
+	context: authenticationMiddleware,
 });
 
 const startServer = async () => {
-	app.use(cors());
 	await server.start();
-	app.use(express.urlencoded({ extended: false }));
-	app.use(express.json());
-	app.use("/graphql", expressMiddleware(server), { context: authenticationMiddleware }); // Add auth middleware
 
 	if (process.env.NODE_ENV === "production") {
-		app.use(express.static("../client/dist"));
-		app.get("*", (req, res) => {
+		server.express.use(express.static("../client/dist"));
+		server.ex.get("*", (req, res) => {
 			res.sendFile(path.resolve("../client/dist/index.html"));
 		});
-		db.once("open", () => {
-			app.listen(PORT, () => {
-				console.log(`Use GraphQL at http://localhost:${PORT}/graphql`);
-			});
-		});
 	}
+
+	console.log("Attempting to connect to database...");
+	db.on("error", console.error.bind(console, "MongoDB connection error:"));
+	db.once("open", async () => {
+		await server.listen(PORT);
+		console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
+	});
 };
 
-startApolloServer();
+startServer();

@@ -12,7 +12,18 @@ const userSchema = new Schema(
 			required: true,
 			minlength: 8,
 		},
-		plans: [],
+		email: {
+			type: String,
+			required: true,
+			unique: true,
+			match: [/.+@.+\..+/, "Must match an email address!"],
+		},
+		isProvider: {
+			type: Boolean,
+			default: false,
+		},
+		subscribedPlans: [],
+		createdPlans: [],
 	},
 	{
 		toJSON: {

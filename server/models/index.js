@@ -1,6 +1,5 @@
-import User from "./User";
-import Plan from "./Plan";
-import Post from "./Post";
-import Provider from "./Provider";
+import User from "./User.js";
+import Plan from "./Plan.js";
+import Post from "./Post.js";
 
-export { User, Plan, Post, Provider };
+export { User, Plan, Post };
