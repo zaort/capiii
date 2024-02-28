@@ -4,7 +4,6 @@ const typeDefs = `
         username: String
         email: String
         isProvider: Boolean
-        password: String
         subscribedPlans: [Plan]
         planCount: Int
         createdPlans: [Plan]
