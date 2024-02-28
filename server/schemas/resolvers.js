@@ -47,7 +47,7 @@ const resolvers = {
 		},
 		createPlan: async (parent, { planData: { name, description, price } }, context) => {
 			try {
-				console.log("context.user", context.user);
+				// console.log("context.user", context.user);
 				if (!context.user) {
 					throw new Error("No authenticated user");
 				}
@@ -59,14 +59,36 @@ const resolvers = {
 				}
 
 				const plan = await Plan.create({ name, description, price, provider: context.user._id });
+
+				await User.findByIdAndUpdate(context.user._id, { $push: { createdPlans: plan._id } });
 				return plan;
 			} catch (err) {
 				console.log(err);
 			}
 		},
-		createPost: async (parent, { postData: { description, provider, plan } }) => {
+		createPost: async (parent, { postData: { description, plan } }, context) => {
 			try {
-				const post = await Post.create({ description, provider, plan });
+				if (!context.user) {
+					throw new Error("No authenticated user");
+				}
+
+				const user = await User.findById(context.user._id);
+
+				if (!user.isProvider) {
+					throw new Error("Only providers can create posts.");
+				}
+
+				const planData = await Plan.findById(plan);
+
+				if (!planData || String(planData.provider) !== String(user._id)) {
+					throw new Error("You can only create posts for plans you created.");
+				}
+
+				const post = await Post.create({ description, provider: user._id, plan });
+
+				await Plan.findByIdAndUpdate(plan, { $push: { posts: post._id } });
+
+				await User.findByIdAndUpdate(user, { $push: { postsCreated: post._id } });
 				return post;
 			} catch (err) {
 				console.log(err);
@@ -127,13 +149,17 @@ const resolvers = {
 				const user = await User.findById(context.user._id);
 
 				if (!user.isProvider) {
-					throw new Error("Users cannot delete plans plans.");
+					throw new Error("Users cannot delete plans.");
 				}
+
 				const updatedUser = await User.findOneAndUpdate(
 					{ _id: context.user._id },
 					{ $pull: { createdPlans: planId } },
 					{ new: true }
 				).populate("createdPlans");
+
+				await Plan.findByIdAndDelete(planId);
+
 				return updatedUser;
 			}
 		},

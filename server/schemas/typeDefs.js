@@ -7,6 +7,7 @@ const typeDefs = `
         subscribedPlans: [Plan]
         planCount: Int
         createdPlans: [Plan]
+        postCreated: [Post]
     }
     type Plan{
         _id: ID!
@@ -33,7 +34,6 @@ const typeDefs = `
     }
     input PostInput{
         description: String!
-        provider: ID!
         plan: ID!
     }
     input PlanSubscriptionInput {

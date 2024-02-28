@@ -24,6 +24,7 @@ const userSchema = new Schema(
 		},
 		subscribedPlans: [],
 		createdPlans: [],
+		postsCreated: [],
 	},
 	{
 		toJSON: {
