@@ -66,12 +66,12 @@ const resolvers = {
 			}
 		},
 		subscribePlan: async (parent, { planData }, context) => {
-			console.log("context.user:", context.user);
-			console.log("planData:", planData);
+			// console.log("context.user -----", context.user);
+			// console.log("planData ------", planData);
 
 			if (context.user) {
 				const user = await User.findById(context.user._id);
-				console.log("user:", user);
+				// console.log("user -----", user);
 
 				if (user.isProvider) {
 					throw new Error("Providers cannot subscribe or unsubscribe to plans");
@@ -82,15 +82,14 @@ const resolvers = {
 					{ $addToSet: { subscribedPlans: planData.planId } },
 					{ new: true }
 				).populate("subscribedPlans");
-				console.log("updatedUser:", updatedUser);
-
+				// console.log("updatedUser -------", updatedUser);
 
 				const updatedPlan = await Plan.findOneAndUpdate(
 					{ _id: planData.planId },
 					{ $addToSet: { subscribers: context.user._id } },
 					{ new: true }
 				);
-				console.log("updatedPlan:", updatedPlan);
+				// console.log("updatedPlan -------", updatedPlan);
 
 				return updatedUser;
 			} else {
@@ -108,6 +107,11 @@ const resolvers = {
 					{ $pull: { subscribedPlans: planId } },
 					{ new: true }
 				).populate("subscribedPlans");
+				const updatedPlan = await Plan.findOneAndUpdate(
+					{ _id: planId },
+					{ $pull: { subscribers: context.user._id } },
+					{ new: true }
+				);
 				return updatedUser;
 			}
 		},
