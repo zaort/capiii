@@ -1,5 +1,5 @@
-import { Schema, model } from "mongoose";
-import bcrypt from "bcrypt";
+const { Schema, model } = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const userSchema = new Schema(
 	{
@@ -50,4 +50,4 @@ userSchema.virtual("planCount").get(function () {
 
 const User = model("User", userSchema);
 
-export default User;
+module.exports = User;

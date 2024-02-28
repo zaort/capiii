@@ -38,6 +38,10 @@ const typeDefs = `
         provider: ID!
         plan: ID!
     }
+    input PlanSubscriptionInput {
+        planId: ID!
+        userId: ID!
+    }
     type Auth {
         token: ID!
         user: User
@@ -50,9 +54,9 @@ const typeDefs = `
         createUser(username: String!, email: String!, password: String!, isProvider: Boolean!): Auth
         createPlan(planData: PlanInput!): Plan
         createPost(postData: PostInput!): Post
-        subscribePlan(planId: ID!): User
+        subscribePlan(planData: PlanSubscriptionInput!): User
         unsubscribePlan(planId: ID!): User
         removePlan(planId: ID!): User
     }
 `;
-export default typeDefs;
+module.exports = typeDefs;

@@ -1,5 +1,5 @@
-import User from "./User.js";
-import Plan from "./Plan.js";
-import Post from "./Post.js";
+const User = require("./User.js");
+const Plan = require("./Plan.js");
+const Post = require("./Post.js");
 
-export { User, Plan, Post };
+module.exports = { User, Plan, Post };

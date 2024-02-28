@@ -1,6 +1,5 @@
-import { User, Plan, Post } from "../models/index.js";
-import auth from "../utils/authentication.js";
-const { signToken, AuthenticationError } = auth;
+const { User, Plan, Post } = require("../models");
+const { signToken, AuthenticationError } = require("../utils/authentication.js");
 const resolvers = {
 	Query: {
 		me: async (parent, args, context) => {
@@ -20,12 +19,14 @@ const resolvers = {
 					throw AuthenticationError;
 				}
 
-				const correctPw = await user.isCorrectPassword(password);
+				const correctPassword = await user.isCorrectPassword(password);
 
-				if (!correctPw) {
+				console.log(user);
+				if (!correctPassword) {
 					throw AuthenticationError;
 				}
 				const token = signToken(user);
+				console.log(token);
 				return { token, user };
 			} catch (err) {
 				console.log(err);
@@ -64,19 +65,36 @@ const resolvers = {
 				console.log(err);
 			}
 		},
-		subscribePlan: async (parent, { planId }, context) => {
+		subscribePlan: async (parent, { planData }, context) => {
+			console.log("context.user:", context.user);
+			console.log("planData:", planData);
+
 			if (context.user) {
 				const user = await User.findById(context.user._id);
+				console.log("user:", user);
+
 				if (user.isProvider) {
 					throw new Error("Providers cannot subscribe or unsubscribe to plans");
 				}
+
 				const updatedUser = await User.findOneAndUpdate(
 					{ _id: context.user._id },
-					{ $addToSet: { subscribedPlans: planId } },
+					{ $addToSet: { subscribedPlans: planData.planId } },
 					{ new: true }
 				).populate("subscribedPlans");
+				console.log("updatedUser:", updatedUser);
+
+
+				const updatedPlan = await Plan.findOneAndUpdate(
+					{ _id: planData.planId },
+					{ $addToSet: { subscribers: context.user._id } },
+					{ new: true }
+				);
+				console.log("updatedPlan:", updatedPlan);
 
 				return updatedUser;
+			} else {
+				console.log("No authenticated user");
 			}
 		},
 		unsubscribePlan: async (parent, { planId }, context) => {
@@ -110,4 +128,4 @@ const resolvers = {
 		},
 	},
 };
-export default resolvers;
+module.exports = resolvers;

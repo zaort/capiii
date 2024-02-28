@@ -1,3 +1,5 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-export default mongoose.connect("mongodb://localhost:27017/PlansPayments");
+mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/paymentPlans");
+
+module.exports = mongoose.connection;
