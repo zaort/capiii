@@ -30,7 +30,6 @@ const typeDefs = `
         name: String!
         description: String!
         price: Float!
-        provider: ID!
     }
     input PostInput{
         description: String!
@@ -39,7 +38,6 @@ const typeDefs = `
     }
     input PlanSubscriptionInput {
         planId: ID!
-        userId: ID!
     }
     type Auth {
         token: ID!

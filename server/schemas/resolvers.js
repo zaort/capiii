@@ -45,13 +45,20 @@ const resolvers = {
 				console.log(err);
 			}
 		},
-		createPlan: async (parent, { planData: { name, description, price, provider } }) => {
+		createPlan: async (parent, { planData: { name, description, price } }, context) => {
 			try {
-				const user = await User.findById(provider);
-				if (!user.isProvider) {
-					throw new Error("Users cannot create plans plans.");
+				console.log("context.user", context.user);
+				if (!context.user) {
+					throw new Error("No authenticated user");
 				}
-				const plan = await Plan.create({ name, description, price, provider });
+
+				const user = await User.findById(context.user._id);
+
+				if (!user.isProvider) {
+					throw new Error("Users cannot create plans.");
+				}
+
+				const plan = await Plan.create({ name, description, price, provider: context.user._id });
 				return plan;
 			} catch (err) {
 				console.log(err);
