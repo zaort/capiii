@@ -18,7 +18,7 @@ module.exports = {
 			token = token.split(" ").pop().trim();
 		}
 		if (!token) {
-			console.log(`missing token for ${req.method} ${req.path}`);
+			// console.log(`missing token for ${req.method} ${req.path}`);
 			return req;
 		}
 		try {

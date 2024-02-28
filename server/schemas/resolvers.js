@@ -21,12 +21,12 @@ const resolvers = {
 
 				const correctPassword = await user.isCorrectPassword(password);
 
-				console.log(user);
+				// console.log(user);
 				if (!correctPassword) {
 					throw AuthenticationError;
 				}
 				const token = signToken(user);
-				console.log(token);
+				// console.log(token);   // token used for testing
 				return { token, user };
 			} catch (err) {
 				console.log(err);

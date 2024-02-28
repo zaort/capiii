@@ -1,8 +1,6 @@
 const typeDefs = `
     type User {
         _id: ID
-        username: String
-        email: String
         isProvider: Boolean
         subscribedPlans: [Plan]
         planCount: Int
