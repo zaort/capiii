@@ -23,8 +23,8 @@ const userSchema = new Schema(
 			default: false,
 		},
 		subscribedPlans: [],
-		createdPlans: [],
-		postsCreated: [],
+		createdPlans: [{ type: Schema.Types.ObjectId, ref: "Plan" }],
+		postsCreated: [{ type: Schema.Types.ObjectId, ref: "Post" }],
 	},
 	{
 		toJSON: {
