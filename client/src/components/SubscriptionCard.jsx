@@ -1,37 +1,25 @@
-import { useAuthContext } from '../utils/auth';
-import { useMutation } from '@apollo/client';
-import { UNSUBSCRIBE_PLAN } from '../utils/qandm';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const SubscriptionCard = ({ subscription }) => {
- const { user } = useAuthContext();
- const [unsubscribe, { loading, error }] = useMutation(UNSUBSCRIBE_PLAN);
-
- const handleUnsubscribe = async () => {
-  try {
-   await unsubscribe({ variables: { planId: subscription.plan._id } });
-   // Potentially, update the UI to reflect the unsubscribed state 
-  } catch (error) {
-   console.error('Error unsubscribing:', error);
-   // Handle potential errors
-  }
- };
-
  return (
-  <div className="border border-gray-200 shadow-md rounded-lg p-4">
-   <h2 className="text-lg font-bold">{subscription.plan.name} </h2>
-   <p className="text-gray-600">{subscription.plan.description}</p>
-   <p className="font-bold text-xl">${subscription.plan.price}/month</p>
+  <div className="border border-gray-300 rounded p-4 shadow-md">
+   <h2 className="text-xl font-bold">Plan: {subscription.plan.name}</h2>
+   <p className="my-2">Status: {subscription.status} </p>
+   <p>Price: ${subscription.plan.price}/month</p>
+   {/* Add more fields like start date, renewal date if applicable */}
 
-   {/* Conditionally render the unsubscribe button */}
-   {user && (
+   {/* Conditional Links or Actions */}
+   {subscription.status === 'active' && (
     <button
-     className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2"
-     onClick={handleUnsubscribe}
-     disabled={loading}
+     className="bg-red-600 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-red-700"
+     onClick={() => { /* Handle cancellation logic */ }}
     >
-     Unsubscribe
+     Cancel Subscription
     </button>
    )}
+
+   {/* Potentially add a link to view details for providers */}
   </div>
  );
 };

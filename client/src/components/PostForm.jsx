@@ -1,35 +1,38 @@
-import { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import { CREATE_POST } from '../utils/qandm';
+import React, { useState } from 'react';
 
-const PostForm = ({ planId, onSubmit }) => {
- const [formData, setFormData] = useState({
+const PostForm = ({ onSubmit, initialValues, formTitle = 'Create Post' }) => {
+ const [formData, setFormData] = useState(initialValues || {
+  title: '',
   description: '',
-  // ... add other fields if needed
+  plan: '', // Assuming you want to associate posts with plans
  });
- const [createPost, { loading, error }] = useMutation(CREATE_POST);
 
  const handleChange = (e) => {
   setFormData({ ...formData, [e.target.name]: e.target.value });
  };
 
- const handleSubmit = async (e) => {
+
+ const handleSubmit = (e) => {
   e.preventDefault();
-
-  try {
-   const { data } = await createPost({ variables: { postData: { ...formData, plan: planId } } });
-   // Assuming your CREATE_POST returns the newly created post 
-   if (onSubmit) onSubmit(data.createPost);
-
-  } catch (error) {
-   console.error('Error creating post:', error);
-   // Handle potential errors during post creation
-  }
+  onSubmit(formData);
  };
 
  return (
-  <form onSubmit={handleSubmit}>
-   {error && <p className="text-red-500">An error occurred. Please try again.</p>}
+  <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+   <h2 className="text-2xl font-bold mb-6 text-center">{formTitle}</h2>
+
+   <div className="mb-4">
+    <label htmlFor="title" className="block">Title</label>
+    <input
+     type="text"
+     id="title"
+     name="title"
+     value={formData.title}
+     onChange={handleChange}
+     className="w-full p-3 border border-gray-300 rounded"
+     required
+    />
+   </div>
 
    <div className="mb-4">
     <label htmlFor="description" className="block">Description</label>
@@ -38,17 +41,33 @@ const PostForm = ({ planId, onSubmit }) => {
      name="description"
      value={formData.description}
      onChange={handleChange}
+     className="w-full p-3 border border-gray-300 rounded"
      required
-     className="w-full p-2 border"
-    />
+    ></textarea>
    </div>
-   {/* Add more fields as needed */}
 
-   <button type="submit" disabled={loading} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-    {loading ? 'Creating Post...' : 'Create Post'}
+   <div className="mb-4">
+    <label htmlFor="plan" className="block">Related Plan</label>
+    <select
+     id="plan"
+     name="plan"
+     value={formData.plan}
+     onChange={handleChange}
+     className="w-full p-3 border border-gray-300 rounded"
+    >
+     <option value="">Select a Plan</option>
+     {/* Populate this with plan options fetched from your backend */}
+    </select>
+   </div>
+
+   <button
+    type="submit"
+    className="bg-blue-600 text-white font-bold py-3 px-6 rounded shadow hover:bg-blue-700 w-full"
+   >
+    {formTitle === 'Create Post' ? 'Create' : 'Save Changes'}
    </button>
   </form>
  );
 };
 
-export default PostForm;
+export default PostForm; 

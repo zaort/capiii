@@ -1,40 +1,29 @@
-import { useAuthContext } from '../utils/auth';
-import { useMutation } from '@apollo/client';
-import { DELETE_POST } from '../utils/qandm';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const PostCard = ({ post }) => {
- const { user } = useAuthContext();
- const [deletePost, { loading, error }] = useMutation(DELETE_POST);
-
- const handleDelete = async () => {
-  // Add confirmation logic (if desired) before deleting
-  try {
-   await deletePost({ variables: { postId: post._id } });
-   // Potentially handle post deletion in the parent component (e.g., remove from a list)
-  } catch (error) {
-   console.error('Error deleting post:', error);
-   // Handle potential errors
-  }
- };
-
  return (
-  <div className="border border-gray-200 rounded-lg shadow-md p-4">
-   {/* ... Render post data: title, description, etc.  */}
-   <h3 className="text-lg font-bold">{post.title}</h3>
-   <p className="text-gray-700">{post.description}</p>
+  <div className="border border-gray-300 rounded p-4 shadow-md">
+   <h2 className="text-xl font-bold">{post.title} </h2>
+   {/* Add a potential truncation function if description is long */}
+   <p className="my-2">{post.description}</p>
 
-   {/* ... Potentially display post creation information, provider */}
-
-   {/* Conditional Delete Button */}
-   {user && user._id === post.provider._id && (
-    <button
-     onClick={handleDelete}
-     disabled={loading}
-     className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2"
-    >
-     Delete Post
-    </button>
+   {/* Display plan association */}
+   {post.plan && (
+    <p className="mt-3">
+     Related Plan:
+     <Link to={`/plans/${post.plan._id}`} className="text-blue-600 hover:underline">
+      {post.plan.name}
+     </Link>
+    </p>
    )}
+
+   <Link
+    to={`/posts/${post._id}`}
+    className="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-blue-700"
+   >
+    Read More
+   </Link>
   </div>
  );
 };

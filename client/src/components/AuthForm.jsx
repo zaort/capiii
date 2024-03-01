@@ -1,50 +1,35 @@
-import { useState } from 'react';
-import { useAuthContext } from '../utils/auth';
-import { useMutation } from '@apollo/client';
-import { LOGIN, CREATE_USER } from '../utils/qandm';
+import React, { useState } from 'react';
 
-const AuthForm = ({ type }) => {
+const AuthForm = ({ formType, onSubmit, error }) => {
  const [formData, setFormData] = useState({
+  username: '',
   email: '',
   password: '',
-  username: '',
-  isProvider: false
+  isProvider: false,
  });
- const { login } = useAuthContext();
- const [createUser, { error: createUserError }] = useMutation(CREATE_USER);
- const [loginUser, { error: loginError }] = useMutation(LOGIN);
 
  const handleChange = (e) => {
-  setFormData({ ...formData, [e.target.name]: e.target.value });
+  setFormData({
+   ...formData,
+   [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value,
+  });
  };
 
- const handleSubmit = async (e) => {
+ const handleSubmit = (e) => {
   e.preventDefault();
-
-  try {
-   if (type === 'login') {
-    const { data } = await loginUser({ variables: { email: formData.email, password: formData.password } });
-    const { token, user } = data.login;
-    login({ token, user });
-   } else if (type === 'register') {
-    const { data } = await createUser({ variables: { ...formData } });
-    const { token, user } = data.createUser;
-    login({ token, user });
-   }
-  } catch (error) {
-   if (error.graphQLErrors && error.graphQLErrors.length > 0) {
-    console.error(error.graphQLErrors[0].message);
-   } else {
-    console.error(error);
-   }
-  }
+  onSubmit(formData);
  };
 
  return (
-  <form onSubmit={handleSubmit}>
-   {createUserError || loginError ? <p className="text-red-500">An error occurred. Please review your information and try again.</p> : null}
-   {/* Username field only for registration */}
-   {type === 'register' && (
+  <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+   <h2 className="text-2xl font-bold mb-6 text-center">
+    {formType === 'login' ? 'Login' : 'Register'}
+   </h2>
+
+   {error && <p className="text-red-600 text-center mb-4">{error}</p>}
+
+   {/* Username Field (Conditional) */}
+   {formType === 'register' && (
     <div className="mb-4">
      <label htmlFor="username" className="block">Username</label>
      <input
@@ -53,13 +38,14 @@ const AuthForm = ({ type }) => {
       name="username"
       value={formData.username}
       onChange={handleChange}
+      className="w-full p-3 border border-gray-300 rounded"
       required
-      className="w-full p-2 border"
      />
     </div>
    )}
 
    <div className="mb-4">
+    {/* Email Field */}
     <label htmlFor="email" className="block">Email</label>
     <input
      type="email"
@@ -67,12 +53,13 @@ const AuthForm = ({ type }) => {
      name="email"
      value={formData.email}
      onChange={handleChange}
+     className="w-full p-3 border border-gray-300 rounded"
      required
-     className="w-full p-2 border"
     />
    </div>
 
    <div className="mb-4">
+    {/* Password Field */}
     <label htmlFor="password" className="block">Password</label>
     <input
      type="password"
@@ -80,26 +67,32 @@ const AuthForm = ({ type }) => {
      name="password"
      value={formData.password}
      onChange={handleChange}
+     className="w-full p-3 border border-gray-300 rounded"
      required
-     className="w-full p-2 border"
     />
    </div>
 
-   {type === 'register' && (
+   {formType === 'register' && (
     <div className="mb-4">
-     <input
-      type="checkbox"
-      id="isProvider"
-      name="isProvider"
-      checked={formData.isProvider}
-      onChange={(e) => setFormData({ ...formData, isProvider: e.target.checked })}
-     />
-     <label htmlFor="isProvider" className="ml-2">Register as Provider</label>
+     <label htmlFor="isProvider" className="block">
+      <input
+       type="checkbox"
+       id="isProvider"
+       name="isProvider"
+       checked={formData.isProvider}
+       onChange={handleChange}
+       className="mr-2 leading-tight"
+      />
+      Register as a Provider
+     </label>
     </div>
    )}
 
-   <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-    {type === 'login' ? 'Login' : 'Register'}
+   <button
+    type="submit"
+    className="bg-blue-600 text-white font-bold py-3 px-6 rounded shadow hover:bg-blue-700 w-full"
+   >
+    {formType === 'login' ? 'Login' : 'Register'}
    </button>
   </form>
  );

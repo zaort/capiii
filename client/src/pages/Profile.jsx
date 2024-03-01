@@ -1,50 +1,66 @@
-import { useAuthContext } from '../utils/auth';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../utils/auth';
 import { useQuery } from '@apollo/client';
-import { GET_USER_PLANS } from '../utils/api';
-import PlanCard from '../components/PlanCard';
+import { GET_USER } from '../utils/queries';
+import 'tailwindcss/tailwind.css';
 
 const Profile = () => {
- const { user } = useAuthContext();
- const { loading, error, data, refetch } = useQuery(GET_USER_PLANS);
+ const { user, logout } = useAuth();
+ const [subscribedPlans, setSubscribedPlans] = useState([]); // For subscriptions
+ const { loading, error, data } = useQuery(GET_USER);
 
- if (!user) return <p>Please log in to view your profile.</p>;
-
- if (loading) return <p>Loading...</p>;
- if (error) return <p>Error: {error.message}</p>;
+ useEffect(() => {
+  if (!user) {
+   // Redirect to login if not logged in 
+  }
+  if (data) {
+   setSubscribedPlans(data.me.subscribedPlans); // Assuming structure of your data
+  }
+ }, [user, data]);
 
  return (
-  <div className="container mx-auto">
-   <h1 className="text-2xl font-bold mb-4">Welcome, {user.username}</h1>
+  <div className="container mx-auto mt-8">
+   <h1 className="text-3xl font-bold mb-6">My Profile</h1>
 
-   {/* User Details Section (Email, etc. ) */}
-   <div className="mb-6">
-    {/* Display user data: username, email, etc. */}
-   </div>
+   {loading && <p className="text-center">Loading profile data...</p>}
+   {error && <p className="text-center text-red-600">Error fetching profile data!</p>}
 
-   {/* Subscribed Plans Section */}
-   <h2 className="text-lg font-bold mb-4">Your Subscriptions</h2>
-   {data.me.subscribedPlans.length === 0 ? (
-    <p>You don't have any subscriptions yet.</p>
-   ) : (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-     {data.me.subscribedPlans.map(plan => (
-      <PlanCard key={plan._id} plan={plan} />
-     ))}
-    </div>
-   )}
+   {user && (
+    <div>
+     <h2>User Details</h2>
+     <p>
+      <strong>Username:</strong> {user.username}
+     </p>
+     <p>
+      <strong>Email:</strong> {user.email}
+     </p>
+     {/* Add more fields as needed  */}
 
-   {/* Created Plans Section */}
-   {user.isProvider && (
-    <>
-     <h2 className="text-lg font-bold mt-6 mb-4">Your Plans</h2>
-     {data.me.createdPlans.length === 0 ? (
-      <p>You haven't created any plans yet.</p>
+     <h2 className="text-2xl font-semibold mt-8">My Subscriptions</h2>
+     {subscribedPlans.length === 0 ? (
+      <p>You are not currently subscribed to any plans.</p>
      ) : (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-       {/* Render a list of created plans  using PlanCard */}
-      </div>
+      <ul className="list-disc ml-6 mt-2">
+       {subscribedPlans.map((plan) => (
+        <li key={plan._id}>{plan.name} - ${plan.price}/month</li>
+       ))}
+      </ul>
      )}
-    </>
+
+     {/* Manage Subscription Button (Conditional) */}
+     {subscribedPlans.length > 0 && (
+      <button className="bg-blue-600 text-white font-bold py-3 px-6 rounded shadow mt-4 hover:bg-blue-700">
+       Manage Subscriptions
+      </button>
+     )}
+
+     <button
+      className="bg-gray-600 text-white font-bold py-3 px-6 rounded shadow mt-4"
+      onClick={logout}
+     >
+      Logout
+     </button>
+    </div>
    )}
   </div>
  );

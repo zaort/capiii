@@ -1,52 +1,69 @@
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useEffect } from 'react';
-import { useAuthContext } from './utils/auth';
+import { ApolloProvider } from '@apollo/client';
+// import client from './utils/apolloClient'; // Assuming you'll create the client setup
+import { useAuth } from './utils/auth';
 
+// Import your components
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Dashboard from './components/Dashboard';
 import Plans from './pages/Plans';
 import PlanDetail from './pages/PlanDetail';
 import Profile from './pages/Profile';
-import Dashboard from './components/Dashboard';
-import SubscriptionList from './components/SubscriptionList';
-
 import NavBar from './components/NavBar';
 
-function App() {
- const { user, login, logout, signup } = useAuthContext();
+// Optional: Include a component for handling 404 errors (Not Found)
+// import NotFound from './components/NotFound';
+
+const App = () => {
+ const { user, login, logout } = useAuth();
+ const [isLoggedIn, setIsLoggedIn] = useState(false);
 
  useEffect(() => {
-  const storedUser = localStorage.getItem('user');
-  if (storedUser) {
-   login(JSON.parse(storedUser));
-  }
- }, []);
+  setIsLoggedIn(!!user); // Update login state based on the presence of the user
+ }, [user]);
+
+ // Function to handle private routes
+ const PrivateRoute = ({ children }) => {
+  return isLoggedIn ? children : <Navigate to="/login" replace />;
+ }
 
  return (
-  <Router>
-   <NavBar />
-   <Routes>
-    <Route path="/" element={<Home />} />
-    <Route path="/login" element={<Login />} />
-    <Route path="/register" element={<Register />} />
-    <Route path="/plans" element={<Plans />} />
-    <Route path="/plans/:planId" element={<PlanDetail />} />
-    <Route
-     path="/profile"
-     element={user ? <Profile /> : <Navigate to="/login" replace />}
-    />
-    <Route
-     path="/dashboard"
-     element={user && user.isProvider ? <Dashboard /> : <Navigate to="/" replace />}
-    />
-    <Route
-     path="/subscriptions"
-     element={user ? <SubscriptionList /> : <Navigate to="/login" replace />}
-    />
-   </Routes>
-  </Router>
+  <ApolloProvider client={client}>
+   <Router>
+    <NavBar login={login} logout={logout} isLoggedIn={isLoggedIn} />
+    <div className="container mx-auto mt-8">
+     <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      {/* Protecting the Dashboard route */}
+      <Route
+       path="/dashboard"
+       element={
+        <PrivateRoute>
+         <Dashboard />
+        </PrivateRoute>
+       }
+      />
+      <Route path="/plans" element={<Plans />} />
+      <Route path="/plans/:planId" element={<PlanDetail />} />
+      <Route
+       path="/profile"
+       element={
+        <PrivateRoute>
+         <Profile />
+        </PrivateRoute>
+       }
+      />
+      <Route path="*" element={<NotFound />} /> {/* Catch-all for unmatched routes */}
+     </Routes>
+    </div>
+   </Router>
+  </ApolloProvider>
  );
-}
+};
 
 export default App;

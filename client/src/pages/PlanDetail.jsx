@@ -1,72 +1,44 @@
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { GET_PLAN } from '../utils/api';
-import { useAuthContext } from '../utils/auth';
-import { useMutation } from '@apollo/client';
-import { SUBSCRIBE_PLAN, UNSUBSCRIBE_PLAN } from '../utils/api';
-
-// Import component for displaying posts (if you have one)
-import PostCard from '../components/PostCard';
+import { GET_PLAN } from '../utils/queries';
+import 'tailwindcss/tailwind.css';
 
 const PlanDetail = () => {
  const { planId } = useParams();
- const { user } = useAuthContext();
- const [subscribe, { error: subscribeError }] = useMutation(SUBSCRIBE_PLAN);
- const [unsubscribe, { error: unsubscribeError }] = useMutation(UNSUBSCRIBE_PLAN);
-
+ const [plan, setPlan] = useState({}); // Initialize state for plan details
  const { loading, error, data } = useQuery(GET_PLAN, {
   variables: { planId }
  });
 
- if (loading) return <p>Loading...</p>;
- if (error) return <p>Error: {error.message}</p>;
-
- const plan = data.plan;
-
- const isSubscribed = user ? user.subscribedPlans.some(sub => sub._id === plan._id,) : false;
-
- const handleSubscriptionChange = async () => {
-  try {
-   if (isSubscribed) {
-    await unsubscribe({ variables: { planId } });
-   } else {
-    await subscribe({ variables: { planId } });
-   }
-   // Potentially refetch plan or user data to update the UI
-  } catch (error) {
-   console.error(error);
-   // Handle potential errors
+ useEffect(() => {
+  if (data) {
+   setPlan(data.plan); // Assuming your query returns a single plan object
   }
- };
+ }, [data]);
 
  return (
-  <div className="container mx-auto">
-   <h1 className="text-2xl font-bold mb-4">{plan.name}</h1>
-   <p className="text-gray-600 mb-4">{plan.description}</p>
-   <p className="font-bold text-xl mb-2">${plan.price}/month</p>
-   {/* Display provider information */}
+  <div className="container mx-auto mt-8">
+   {loading && <p className="text-center">Loading plan details...</p>}
+   {error && <p className="text-center text-red-600">Error fetching plan details!</p>}
 
-   <div className="mt-4">
-    {user && (
-     <button
-      onClick={handleSubscriptionChange}
-      className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${isSubscribed ? 'bg-gray-400' : ''}`}
-     >
-      {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
-     </button>
-    )}
-   </div>
-
-   {/* Section to display posts */}
-   <h2 className="text-lg font-bold mt-6">Posts</h2>
-   {plan.posts.length > 0 ? (
-    <div className="grid grid-cols-1 gap-4">
-     {plan.posts.map(post => (
-      <PostCard key={post._id} post={post} />
-     ))}
+   {/* If you have plan data, display below */}
+   {plan && (
+    <div className="flex flex-col md:flex-row gap-6">
+     <div className="md:w-2/3">
+      <h1 className="text-3xl font-bold">{plan.name}</h1>
+      <p className="text-lg mt-4">{plan.description}</p>
+      <h2 className="text-2xl font-semibold mt-6">Features:</h2>
+      <ul className="list-disc ml-6 mt-2">
+       {/* Implement logic to list out plan features */}
+      </ul>
+     </div>
+     <div className="bg-gray-100 p-6 rounded-lg md:w-1/3">
+      <h2 className="text-xl font-semibold mb-4">Pricing</h2>
+      <p className="text-3xl font-bold text-center mb-6">${plan.price}/month</p>
+      {/* Add a prominent "Subscribe" button here */}
+     </div>
     </div>
-   ) : (
-    <p>No posts yet.</p>
    )}
   </div>
  );
