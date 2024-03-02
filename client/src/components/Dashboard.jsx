@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 import { GET_PROVIDER_PLANS } from '../utils/queries';
 import PlanCard from '../components/PlanCard';
 import { Link } from 'react-router-dom';
-import 'tailwindcss/tailwind.css';
+// import 'tailwindcss/tailwind.css';
 
 const Dashboard = () => {
  const { user } = useAuth();

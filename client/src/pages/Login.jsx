@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
-import 'tailwindcss/tailwind.css';
+// import 'tailwindcss/tailwind.css';
 
 const Login = () => {
  const [formData, setFormData] = useState({ email: '', password: '' });
