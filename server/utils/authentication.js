@@ -1,6 +1,7 @@
 const { GraphQLError } = require("graphql");
 const jwt = require("jsonwebtoken");
 const path = require("path");
+const secret = "secret"
 require("dotenv").config({ path: __dirname + "/./../../.env" });
 const expiration = "2h";
 
@@ -22,7 +23,7 @@ module.exports = {
 			return req;
 		}
 		try {
-			const { data } = jwt.verify(token, process.env.AUTH_SECRET, { maxAge: expiration });
+			const { data } = jwt.verify(token, secret, { maxAge: expiration });
 			req.user = data;
 			// console.log(data);
 		} catch (err) {
@@ -34,6 +35,6 @@ module.exports = {
 	},
 	signToken: function ({ email, username, _id }) {
 		const payload = { email, username, _id };
-		return jwt.sign({ data: payload }, process.env.AUTH_SECRET, { expiresIn: expiration });
+		return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
 	},
 };

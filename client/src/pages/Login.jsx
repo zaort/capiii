@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useAuth } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
+import { LOGIN } from "../utils/mutations";
+import { useMutation } from "@apollo/client";
 // import 'tailwindcss/tailwind.css';
 
 const Login = () => {
  const [formData, setFormData] = useState({ email: '', password: '' });
  const { login } = useAuth();
  const navigate = useNavigate();
+ const [userlogin, { err }] = useMutation(LOGIN)
  const [error, setError] = useState(null);
 
  const handleChange = (e) => {
@@ -17,10 +20,12 @@ const Login = () => {
   e.preventDefault();
 
   try {
-   await login(formData.email, formData.password);
+   // await login(formData.email, formData.password);
+   const { data } = ({ variables: { email: formData.email, password: formData.password } });
    navigate('/'); // Redirect to home page on successful login
   } catch (error) {
-   setError('Invalid login credentials. Please try again.'); // Or handle the specific error
+   setError('Invalid login credentials. Please try again.');
+   console.log(err); // Or handle the specific error
   }
  };
 
@@ -49,7 +54,7 @@ const Login = () => {
       type="password"
       id="password"
       name="password"
-      value={formData.email}
+      value={formData.password}
       onChange={handleChange}
       className="w-full p-3 border border-gray-300 rounded"
       required
