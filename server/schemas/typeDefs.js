@@ -42,9 +42,15 @@ const typeDefs = `
         user: User
     }
     type Query {
+        # queries should match and be verified with client side queries.js
         me: User
+        plans: [Plan]
+        plan(_id: ID!): Plan
+        posts: [Post]
+        post(postID: ID!): Post
     }
     type Mutation {
+        # mutations work on graphql playground
         login(email: String!, password: String!): Auth
         createUser(username: String!, email: String!, password: String!, isProvider: Boolean!): Auth
         createPlan(planData: PlanInput!): Plan

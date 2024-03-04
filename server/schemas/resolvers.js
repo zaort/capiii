@@ -2,12 +2,30 @@ const { User, Plan, Post } = require("../models");
 const { signToken, AuthenticationError } = require("../utils/authentication.js");
 const resolvers = {
 	Query: {
+		//tutoring pending to connect with the client side queries file
 		me: async (parent, args, context) => {
 			if (context.user) {
 				const userData = await User.findOne({ _id: context.user._id }).select("-__v -password");
 				return userData;
 			}
 			return null;
+		},
+		//tutoring pending to connect with the client side queries file
+		posts: async (parent, { username }) => {
+			const params = username ? { username } : {};
+			return Post.find(params).sort({ createdAt: -1 });
+		},
+		//tutoring pending to connect with the client side queries file
+		post: async (parent, { postID }) => {
+			return Post.findOne({ postID });
+		},
+		//tutoring pending to connect with the client side queries file
+		plans: async () => {
+			return Plan.find({}).sort({ createdAt: -1 });
+		},
+		//tutoring pending to connect with the client side queries file
+		plan: async (parent, { planId }) => {
+			return Plan.findOne({ _id: planId });
 		},
 	},
 	Mutation: {
