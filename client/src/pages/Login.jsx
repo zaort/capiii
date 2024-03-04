@@ -48,7 +48,7 @@ const Login = () => {
      <input
       type="password"
       id="password"
-      name="email"
+      name="password"
       value={formData.email}
       onChange={handleChange}
       className="w-full p-3 border border-gray-300 rounded"
