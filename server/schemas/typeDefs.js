@@ -6,6 +6,7 @@ const typeDefs = `
         planCount: Int
         createdPlans: [Plan]
         postCreated: [Post]
+        username: String
     }
     type Plan{
         _id: ID!
@@ -19,6 +20,7 @@ const typeDefs = `
         postCount: Int
     }
     type Post {
+        _id: ID!
         postID: ID!
         description: String
         provider: User

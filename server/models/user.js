@@ -22,7 +22,7 @@ const userSchema = new Schema(
 			type: Boolean,
 			default: false,
 		},
-		subscribedPlans: [],
+		subscribedPlans: [{ type: Schema.Types.ObjectId, ref: "Plan" }],
 		createdPlans: [{ type: Schema.Types.ObjectId, ref: "Plan" }],
 		postsCreated: [{ type: Schema.Types.ObjectId, ref: "Post" }],
 	},
@@ -46,7 +46,7 @@ userSchema.methods.isCorrectPassword = async function (password) {
 };
 
 userSchema.virtual("planCount").get(function () {
-	return this.plans.length;
+	return this.createdPlans.length || 0;
 });
 
 const User = model("User", userSchema);
