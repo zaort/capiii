@@ -5,18 +5,25 @@ import { GET_USER } from "../utils/queries";
 // import 'tailwindcss/tailwind.css';
 
 const Profile = () => {
+	const [userData, setUserData] = useState({});
 	const { user, logout } = useAuth();
 	const [subscribedPlans, setSubscribedPlans] = useState([]); // For subscriptions
 	const { loading, error, data } = useQuery(GET_USER);
 
 	useEffect(() => {
-		if (!user) {
-			// Redirect to login if not logged in
+		if (!loading && data && data.me) {
+			setUserData(data.me);
 		}
-		if (data) {
-			setSubscribedPlans(data.me.subscribedPlans); // Assuming structure of your data
+	}, [loading, data]);
+	// console.log(`user data:${data}`);
+	console.log(userData);
+
+	useEffect(() => {
+		if (data && data.me) {
+			setSubscribedPlans(data.me.subscribedPlans);
 		}
-	}, [user, data]);
+	}, [data]);
+	console.log(subscribedPlans);
 
 	return (
 		<div className="container mx-auto mt-8">
@@ -29,10 +36,10 @@ const Profile = () => {
 				<div>
 					<h2>User Details</h2>
 					<p>
-						<strong>Username:</strong> {user.username}
+						<strong>Username:</strong> {userData.username}
 					</p>
 					<p>
-						<strong>Email:</strong> {user.email}
+						<strong>Email:</strong> {userData.email}
 					</p>
 					{/* Add more fields as needed  */}
 

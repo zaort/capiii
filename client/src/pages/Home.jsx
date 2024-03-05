@@ -9,9 +9,9 @@ const Home = () => {
 	const { loading, error, data } = useQuery(GET_PLANS);
 
 	useEffect(() => {
-		if (data && data.me) {
+		if (data && data.plans) {
 			// Customize this condition if your query structure is different
-			setFeaturedPlans(data.me.featuredPlans);
+			setFeaturedPlans(data.plans);
 		}
 	}, [data]);
 

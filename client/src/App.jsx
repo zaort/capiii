@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ApolloProvider } from "@apollo/client";
 import { useAuth } from "./utils/auth.jsx";
+import { Navigate } from "react-router-dom";
 import "./index.css";
 
 // Import your components

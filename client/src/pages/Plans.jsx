@@ -5,15 +5,18 @@ import PlanCard from "../components/PlanCard";
 // import 'tailwindcss/tailwind.css';
 
 const Plans = () => {
-	const [plans, setPlans] = useState([]);
+	const [plansData, setPlansData] = useState([]);
 	const { loading, error, data } = useQuery(GET_PLANS);
 
+	console.log(data);
 	useEffect(() => {
-		if (data && data.me) {
+		if (data && data.plans) {
 			// Adjust the condition if needed
-			setPlans(data.me.plans);
+			setPlansData(data.plans);
 		}
 	}, [data]);
+
+	console.log(plansData);
 
 	return (
 		<div className="container mx-auto mt-8">
@@ -24,7 +27,7 @@ const Plans = () => {
 			{error && <p className="text-center text-red-600">Error fetching plans!</p>}
 
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
-				{plans.map(plan => (
+				{plansData.map(plan => (
 					<PlanCard key={plan._id} plan={plan} />
 				))}
 			</div>
