@@ -3,13 +3,14 @@ import { useAuth } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import { LOGIN } from "../utils/mutations";
 import { useMutation } from "@apollo/client";
+import { setItem } from "../utils/localStorage";
 // import 'tailwindcss/tailwind.css';
 
 const Login = () => {
  const [formData, setFormData] = useState({ email: '', password: '' });
  const { login } = useAuth();
  const navigate = useNavigate();
- const [userlogin, { err }] = useMutation(LOGIN)
+ const [userLogin, { err, data }] = useMutation(LOGIN)
  const [error, setError] = useState(null);
 
  const handleChange = (e) => {
@@ -21,11 +22,14 @@ const Login = () => {
 
   try {
    // await login(formData.email, formData.password);
-   const { data } = ({ variables: { email: formData.email, password: formData.password } });
-   navigate('/'); // Redirect to home page on successful login
+   const { data } = await userLogin({ variables: { email: formData.email, password: formData.password } });
+   navigate("/");
+   // localStorage.setItem("id_token", token);
+   login(data.login.token)
+
   } catch (error) {
    setError('Invalid login credentials. Please try again.');
-   console.log(err); // Or handle the specific error
+   console.log(error); // Or handle the specific error
   }
  };
 

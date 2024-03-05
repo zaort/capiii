@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../utils/auth";
 import { useQuery } from "@apollo/client";
-import { GET_USER_PLANS } from "../utils/queries";
+import { GET_USER } from "../utils/queries";
 // import 'tailwindcss/tailwind.css';
 
 const Profile = () => {

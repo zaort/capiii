@@ -35,6 +35,8 @@ export const CREATE_USER = gql`
             token
             user {
                 _id
+                username
+                email
             }
         }
     }
@@ -47,7 +49,7 @@ export const LOGIN = gql`
             user {
                 _id
                 username
-            email
+                email
             }
         }
     }

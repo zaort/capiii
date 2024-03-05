@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../utils/auth';
 import { useQuery } from '@apollo/client';
-import { GET_PROVIDER_PLANS } from '../utils/queries';
+import { GET_USER } from '../utils/queries';
 import PlanCard from '../components/PlanCard';
 import { Link } from 'react-router-dom';
-// import 'tailwindcss/tailwind.css';
+import 'tailwindcss/tailwind.css';
 
 const Dashboard = () => {
  const { user } = useAuth();
 
  const [providerPlans, setProviderPlans] = useState([]);
- const { loading, error, data } = useQuery(GET_PROVIDER_PLANS, {
+ const { loading, error, data } = useQuery(GET_USER, {
   skip: !user.isProvider, // Fetch only if the user is a provider
  });
 
  useEffect(() => {
+  console.log(data);
   if (data) {
    setProviderPlans(data.me.createdPlans);
   }

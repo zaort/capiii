@@ -21,6 +21,7 @@ const typeDefs = `
         postCount: Int
     }
     type Post {
+        _id: ID!
         postID: ID!
         description: String
         provider: User

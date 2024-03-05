@@ -24,17 +24,23 @@ export const AuthProvider = ({ children }) => {
 		}
 	};
 
-	const login = async (email, password) => {
+	const login = async (token) => {
 		try {
-			const response = await axios.post("/login", { email, password });
-			const { token } = response.data;
+			// const response = await axios.post("/login", { email, password });
+			// const { token } = response.data;
 			localStorage.setItem("id_token", token);
-			setUser(decode(token));
+			// setUser(decode(token));
 		} catch (error) {
 			console.error("Login error:", error);
 			throw error;
 		}
 	};
+
+	// login(idToken) {
+	// 	// Saves user token to localStorage
+	// 	localStorage.setItem('id_token', idToken);
+	// 	window.location.assign('/');
+	// };
 
 	const logout = () => {
 		localStorage.removeItem("id_token");

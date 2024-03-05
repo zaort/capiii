@@ -38,12 +38,13 @@ export const GET_PLAN = gql`
 	}
 `;
 
-export const GET_USER_PLANS = gql`
+export const GET_USER = gql`
 	query me {
 		me {
 			_id
 			username
 			email
+			isProvider
 			subscribedPlans {
 				_id
 				name
@@ -61,24 +62,24 @@ export const GET_USER_PLANS = gql`
 `;
 
 // TESTING
-export const GET_PROVIDER_PLANS = gql`
-	query me {
-		me {
-			_id
-			username
-			email
-			subscribedPlans {
-				_id
-				name
-				description
-				price
-			}
-			createdPlans {
-				_id
-				name
-				description
-				price
-			}
-		}
-	}
-`;
+// export const GET_PROVIDER_PLANS = gql`
+// 	query me {
+// 		me {
+// 			_id
+// 			username
+// 			email
+// 			subscribedPlans {
+// 				_id
+// 				name
+// 				description
+// 				price
+// 			}
+// 			createdPlans {
+// 				_id
+// 				name
+// 				description
+// 				price
+// 			}
+// 		}
+// 	}
+// `;
