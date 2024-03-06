@@ -19,14 +19,15 @@ const resolvers = {
 			const params = username ? { username } : {};
 			return Post.find(params).sort({ createdAt: -1 });
 		},
-		post: async (parent, { postID }) => {
-			return Post.findOne({ postID });
+		post: async (parent, { postId }) => {
+			return Post.findOne({ postId });
 		},
 		plans: async () => {
 			return Plan.find({}).sort({ createdAt: -1 });
 		},
 		plan: async (parent, { planId }) => {
 			return Plan.findOne({ _id: planId });
+			
 		},
 	},
 	Mutation: {

@@ -48,9 +48,9 @@ const typeDefs = `
         # queries should match and be verified with client side queries.js
         me: User
         plans: [Plan]
-        plan(_id: ID!): Plan
+        plan(planId: ID!): Plan
         posts: [Post]
-        post(postID: ID!): Post
+        post(postId: ID!): Post
     }
     type Mutation {
         # mutations work on graphql playground
