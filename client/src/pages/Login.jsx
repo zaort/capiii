@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../utils/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LOGIN } from "../utils/mutations";
 import { useMutation } from "@apollo/client";
 import { setItem } from "../utils/localStorage";
@@ -30,7 +30,7 @@ const Login = () => {
 			login(data.login.token);
 		} catch (error) {
 			setError("Invalid login credentials. Please try again.");
-			console.log(error); // Or handle the specific error
+			console.log(error);
 		}
 	};
 

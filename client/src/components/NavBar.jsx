@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../utils/auth";
 
 const NavBar = () => {
-	const { user, logout } = useAuth();
+	const { user, isLoggedIn, logout, isProviderState } = useAuth();
 	const navigate = useNavigate();
-	// console.log(`user: `);
-	// console.log(user);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		if (isLoggedIn !== null && isProviderState !== null) {
+			setLoading(false);
+		}
+	}, [isLoggedIn, isProviderState]);
+
+	if (loading) {
+		return <div>Loading...</div>; // or a loading spinner
+	}
+
 	return (
 		<nav className="bg-white shadow-md py-4 px-6">
 			<div className="container mx-auto flex items-center justify-between">
@@ -19,12 +29,12 @@ const NavBar = () => {
 						Plans
 					</Link>
 
-					{user ? (
+					{isLoggedIn ? (
 						<>
 							<Link to="/profile" className="hover:text-blue-600">
 								Profile
 							</Link>
-							{user.isProvider ? (
+							{isProviderState ? (
 								<>
 									<Link to="/dashboard" className="hover:text-blue-600">
 										Dashboard

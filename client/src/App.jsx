@@ -18,12 +18,12 @@ import PlanForm from "./components/PlanForm.jsx";
 const NotFound = () => <h1>Page not found</h1>;
 
 const App = () => {
-	const { user, login, logout } = useAuth();
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	// const { user, login, logout } = useAuth();
+	// const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-	useEffect(() => {
-		setIsLoggedIn(!!user); // Update login state based on the presence of the user
-	}, [user]);
+	// useEffect(() => {
+	// 	setIsLoggedIn(!!user); // Update login state based on the presence of the user
+	// }, [user]);
 
 	// Function to handle private routes
 	// const PrivateRoute = ({ children }) => {
@@ -33,7 +33,7 @@ const App = () => {
 
 	return (
 		<Router>
-			<NavBar login={login} logout={logout} isLoggedIn={isLoggedIn} />
+			<NavBar />
 			<div className="container mx-auto mt-8">
 				<Routes>
 					<Route path="/" element={<Home />} />
@@ -44,7 +44,7 @@ const App = () => {
 					<Route path="/plans/:planId" element={<PlanDetail />} />
 					<Route path="/profile" element={<Profile />} />
 					<Route path="/create-plan" element={<PlanForm />} />
-					<Route path="*" element={<NotFound />} /> {/* Catch-all for unmatched routes */}
+					<Route path="*" element={<NotFound />} /> 
 				</Routes>
 			</div>
 		</Router>
