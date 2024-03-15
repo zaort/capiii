@@ -18,68 +18,48 @@ export const GET_PLANS = gql`
 `;
 
 export const GET_PLAN = gql`
-	query getPlan($planId: ID!) {
-		plan(_id: $planId) {
+	query Query($planId: ID!) {
+		plan(planId: $planId) {
 			_id
-			name
 			description
+			name
 			price
-			provider {
-				_id
-				username
-			}
-			posts {
-				_id
-				createdAt
-				description
-			}
-			subscriberCount
 		}
 	}
 `;
 
 export const GET_USER = gql`
-	query me {
+	query Query {
 		me {
 			_id
-			username
 			email
 			isProvider
-			subscribedPlans {
-				_id
-				name
-				description
-				price
-			}
+			planCount
+			username
 			createdPlans {
 				_id
-				name
-				description
-				price
+			}
+			subscribedPlans {
+				_id
+			}
+			postCreated {
+				_id
 			}
 		}
 	}
 `;
 
-// TESTING
-// export const GET_PROVIDER_PLANS = gql`
-// 	query me {
-// 		me {
-// 			_id
-// 			username
-// 			email
-// 			subscribedPlans {
-// 				_id
-// 				name
-// 				description
-// 				price
-// 			}
-// 			createdPlans {
-// 				_id
-// 				name
-// 				description
-// 				price
-// 			}
-// 		}
-// 	}
-// `;
+export const GET_PROVIDER_CREATED_PLANS = gql`
+	query GetProviderCreatedPlans {
+		me {
+			_id
+			createdPlans {
+				_id
+				description
+				name
+				price
+				subscriberCount
+			}
+		}
+	}
+`;

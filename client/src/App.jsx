@@ -25,9 +25,10 @@ const App = () => {
 	}, [user]);
 
 	// Function to handle private routes
-	const PrivateRoute = ({ children }) => {
-		return isLoggedIn ? children : <Navigate to="/login" replace />;
-	};
+	// const PrivateRoute = ({ children }) => {
+	// 	return isLoggedIn ? children : <Navigate to="/login" replace />;
+	// };
+	console.log(isLoggedIn);
 
 	return (
 		<Router>
@@ -37,24 +38,10 @@ const App = () => {
 					<Route path="/" element={<Home />} />
 					<Route path="/login" element={<Login />} />
 					<Route path="/register" element={<Register />} />
-					<Route
-						path="/dashboard"
-						element={
-							<PrivateRoute>
-								<Dashboard />
-							</PrivateRoute>
-						}
-					/>
+					<Route path="/dashboard" element={<Dashboard />} />
 					<Route path="/plans" element={<Plans />} />
 					<Route path="/plans/:planId" element={<PlanDetail />} />
-					<Route
-						path="/profile"
-						element={
-							<PrivateRoute>
-								<Profile />
-							</PrivateRoute>
-						}
-					/>
+					<Route path="/profile" element={<Profile />} />
 					<Route path="*" element={<NotFound />} /> {/* Catch-all for unmatched routes */}
 				</Routes>
 			</div>

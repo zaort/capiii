@@ -15,7 +15,7 @@ const Profile = () => {
 			setUserData(data.me);
 		}
 	}, [loading, data]);
-	// console.log(`user data:${data}`);
+	console.log(`user data:${data}`);
 	console.log(userData);
 
 	useEffect(() => {
