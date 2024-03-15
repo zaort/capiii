@@ -15,15 +15,15 @@ const Profile = () => {
 			setUserData(data.me);
 		}
 	}, [loading, data]);
-	console.log(`user data:${data}`);
-	console.log(userData);
+	// console.log(`user data:${data}`);
+	// console.log(userData);
 
 	useEffect(() => {
 		if (data && data.me) {
 			setSubscribedPlans(data.me.subscribedPlans);
 		}
 	}, [data]);
-	console.log(subscribedPlans);
+	// console.log(subscribedPlans);
 
 	return (
 		<div className="container mx-auto mt-8">

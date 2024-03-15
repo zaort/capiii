@@ -5,7 +5,8 @@ import { useAuth } from "../utils/auth";
 const NavBar = () => {
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
-
+	// console.log(`user: `);
+	// console.log(user);
 	return (
 		<nav className="bg-white shadow-md py-4 px-6">
 			<div className="container mx-auto flex items-center justify-between">
@@ -17,13 +18,22 @@ const NavBar = () => {
 					<Link to="/plans" className="hover:text-blue-600">
 						Plans
 					</Link>
-					{/* Add more links if needed: "About", "Contact", etc. */}
 
 					{user ? (
 						<>
 							<Link to="/profile" className="hover:text-blue-600">
 								Profile
 							</Link>
+							{user.isProvider ? (
+								<>
+									<Link to="/dashboard" className="hover:text-blue-600">
+										Dashboard
+									</Link>
+									<Link to="/create-plan" className="hover:text-blue-600">
+										Create Plan
+									</Link>
+								</>
+							) : null}
 							<button
 								onClick={() => {
 									logout();

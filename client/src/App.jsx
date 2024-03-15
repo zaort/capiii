@@ -14,6 +14,7 @@ import Plans from "./pages/Plans";
 import PlanDetail from "./pages/PlanDetail";
 import Profile from "./pages/Profile";
 import NavBar from "./components/NavBar";
+import PlanForm from "./components/PlanForm.jsx";
 const NotFound = () => <h1>Page not found</h1>;
 
 const App = () => {
@@ -28,7 +29,7 @@ const App = () => {
 	// const PrivateRoute = ({ children }) => {
 	// 	return isLoggedIn ? children : <Navigate to="/login" replace />;
 	// };
-	console.log(isLoggedIn);
+	// console.log(isLoggedIn);
 
 	return (
 		<Router>
@@ -42,6 +43,7 @@ const App = () => {
 					<Route path="/plans" element={<Plans />} />
 					<Route path="/plans/:planId" element={<PlanDetail />} />
 					<Route path="/profile" element={<Profile />} />
+					<Route path="/create-plan" element={<PlanForm />} />
 					<Route path="*" element={<NotFound />} /> {/* Catch-all for unmatched routes */}
 				</Routes>
 			</div>

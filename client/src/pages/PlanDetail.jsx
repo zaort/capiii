@@ -31,7 +31,7 @@ const PlanDetail = () => {
 					<div className="md:w-2/3">
 						<h1 className="text-3xl font-bold">{plan.name}</h1>
 						<p className="text-lg mt-4">{plan.description}</p>
-						<h2 className="text-2xl font-semibold mt-6">Features:</h2>
+
 						<ul className="list-disc ml-6 mt-2">{/* Implement logic to list out plan features */}</ul>
 					</div>
 					<div className="bg-gray-100 p-6 rounded-lg md:w-1/3">

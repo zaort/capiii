@@ -53,6 +53,7 @@ export const GET_PROVIDER_CREATED_PLANS = gql`
 	query GetProviderCreatedPlans {
 		me {
 			_id
+			isProvider
 			createdPlans {
 				_id
 				description

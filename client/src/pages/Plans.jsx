@@ -8,7 +8,7 @@ const Plans = () => {
 	const [plansData, setPlansData] = useState([]);
 	const { loading, error, data } = useQuery(GET_PLANS);
 
-	console.log(data);
+	// console.log(data);
 	useEffect(() => {
 		if (data && data.plans) {
 			// Adjust the condition if needed
@@ -16,7 +16,7 @@ const Plans = () => {
 		}
 	}, [data]);
 
-	console.log(plansData);
+	// console.log(plansData);
 
 	return (
 		<div className="container mx-auto mt-8">

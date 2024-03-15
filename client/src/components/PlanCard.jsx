@@ -17,12 +17,20 @@ const PlanCard = ({ plan }) => {
 
 			<p className="mt-3">Subscribers: {plan.subscriberCount}</p>
 
-			<Link
-				to={`/plans/${plan._id}`}
-				className="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-blue-700"
-			>
-				View Details
-			</Link>
+			<div className="flex justify-between mt-2">
+				<Link
+					to={`/plans/${plan._id}`}
+					className="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-blue-700"
+				>
+					View Details
+				</Link>
+				{/* <Link
+					to={`/plans/${plan._id}/edit`}
+					className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded"
+				>
+					Edit
+				</Link> */}
+			</div>
 		</div>
 	);
 };

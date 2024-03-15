@@ -9,7 +9,15 @@ export const AuthProvider = ({ children }) => {
 	useEffect(() => {
 		const token = localStorage.getItem("id_token");
 		if (token && !isTokenExpired(token)) {
-			setUser(decode(token));
+			// console.log(token);
+			const decodedToken = decode(token);
+			// console.log(decodedToken);
+			setUser({
+				email: decodedToken.data.email,
+				username: decodedToken.data.username,
+				_id: decodedToken.data._id,
+				isProvider: decodedToken.data.isProvider,
+			});
 		}
 	}, []);
 
@@ -24,7 +32,7 @@ export const AuthProvider = ({ children }) => {
 		}
 	};
 
-	const login = async (token) => {
+	const login = async token => {
 		try {
 			// const response = await axios.post("/login", { email, password });
 			// const { token } = response.data;
@@ -36,16 +44,9 @@ export const AuthProvider = ({ children }) => {
 		}
 	};
 
-	// login(idToken) {
-	// 	// Saves user token to localStorage
-	// 	localStorage.setItem('id_token', idToken);
-	// 	window.location.assign('/');
-	// };
-
 	const logout = () => {
 		localStorage.removeItem("id_token");
 		setUser(null);
-		// Consider redirecting the user if needed (e.g., to the login page)
 	};
 
 	return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
