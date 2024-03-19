@@ -12,7 +12,6 @@ export const AuthProvider = ({ children }) => {
 		const token = localStorage.getItem("id_token");
 		if (token && !isTokenExpired(token)) {
 			const decodedToken = decode(token);
-			console.log("use state in auth file was executed");
 			setUser({
 				email: decodedToken.data.email,
 				username: decodedToken.data.username,
@@ -41,7 +40,13 @@ export const AuthProvider = ({ children }) => {
 		try {
 			localStorage.setItem("id_token", token);
 			setIsLoggedIn(true);
-			const decodedToken = decode(token); 
+			const decodedToken = decode(token);
+			setUser({
+				email: decodedToken.data.email,
+				username: decodedToken.data.username,
+				_id: decodedToken.data._id,
+				isProvider: decodedToken.data.isProvider,
+			});
 			setIsProviderState(decodedToken.data.isProvider);
 		} catch (error) {
 			console.error("Login error:", error);
@@ -49,17 +54,17 @@ export const AuthProvider = ({ children }) => {
 		}
 	};
 
-	//isProviderState is false until the user refreshes the page
-	useEffect(() => {
-		console.log("isLoggedIn:", isLoggedIn);
-		console.log("isProviderState:", isProviderState);
-	}, [isLoggedIn, isProviderState]);
-
 	const logout = () => {
 		localStorage.removeItem("id_token");
 		setUser(null);
 		setIsLoggedIn(false);
+		setIsProviderState(false);
 	};
+
+	useEffect(() => {
+		console.log("isLoggedIn:", isLoggedIn);
+		console.log("isProviderState:", isProviderState);
+	}, [isLoggedIn, isProviderState]);
 
 	return (
 		<AuthContext.Provider value={{ user, isLoggedIn, login, logout, isProviderState }}>

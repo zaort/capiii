@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../utils/auth";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "../utils/queries";
-// import 'tailwindcss/tailwind.css';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
 	const [userData, setUserData] = useState({});
@@ -13,24 +13,20 @@ const Profile = () => {
 	useEffect(() => {
 		if (!loading && data && data.me) {
 			setUserData(data.me);
-		}
-	}, [loading, data]);
-	// console.log(`user data:${data}`);
-	// console.log(userData);
-
-	useEffect(() => {
-		if (data && data.me) {
 			setSubscribedPlans(data.me.subscribedPlans);
 		}
-	}, [data]);
-	// console.log(subscribedPlans);
+	}, [loading, data]);
 
 	return (
 		<div className="container mx-auto mt-8">
 			<h1 className="text-3xl font-bold mb-6">My Profile</h1>
 
-			{loading && <p className="text-center">Loading profile data...</p>}
-			{error && <p className="text-center text-red-600">Error fetching profile data!</p>}
+			{loading && (
+				<p className="text-center">Loading profile data...</p>
+			)}
+			{error && (
+				<p className="text-center text-red-600">Error fetching profile data!</p>
+			)}
 
 			{user && (
 				<div>
@@ -41,7 +37,6 @@ const Profile = () => {
 					<p>
 						<strong>Email:</strong> {userData.email}
 					</p>
-					{/* Add more fields as needed  */}
 
 					<h2 className="text-2xl font-semibold mt-8">My Subscriptions</h2>
 					{subscribedPlans.length === 0 ? (
@@ -58,8 +53,9 @@ const Profile = () => {
 
 					{/* Manage Subscription Button (Conditional) */}
 					{subscribedPlans.length > 0 && (
-						<button className="bg-blue-600 text-white font-bold py-3 px-6 rounded shadow mt-4 hover:bg-blue-700">
-							Manage Subscriptions
+						<button
+							className="bg-blue-600 text-white font-bold py-3 px-6 rounded shadow mt-4 hover:bg-blue-700">
+							<Link to="/subscription-list">Manage Subscriptions</Link>
 						</button>
 					)}
 

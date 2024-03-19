@@ -15,6 +15,7 @@ import PlanDetail from "./pages/PlanDetail";
 import Profile from "./pages/Profile";
 import NavBar from "./components/NavBar";
 import PlanForm from "./components/PlanForm.jsx";
+import SubscriptionList from "./components/SubscriptionList.jsx";
 const NotFound = () => <h1>Page not found</h1>;
 
 const App = () => {
@@ -43,8 +44,9 @@ const App = () => {
 					<Route path="/plans" element={<Plans />} />
 					<Route path="/plans/:planId" element={<PlanDetail />} />
 					<Route path="/profile" element={<Profile />} />
+					<Route path="/subscription-list" element={<SubscriptionList />} />
 					<Route path="/create-plan" element={<PlanForm />} />
-					<Route path="*" element={<NotFound />} /> 
+					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</div>
 		</Router>

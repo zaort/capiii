@@ -41,6 +41,13 @@ export const GET_USER = gql`
 			}
 			subscribedPlans {
 				_id
+				name
+				description
+				price
+				provider {
+					_id
+					username
+				}
 			}
 			postCreated {
 				_id
