@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ApolloProvider } from "@apollo/client";
+import { useAuth } from "./utils/auth.jsx";
+import { Navigate } from "react-router-dom";
+import "./index.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+// Import your components
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./components/Dashboard";
+import Plans from "./pages/Plans";
+import PlanDetail from "./pages/PlanDetail";
+import Profile from "./pages/Profile";
+import NavBar from "./components/NavBar";
+import PlanForm from "./components/PlanForm.jsx";
+import SubscriptionList from "./components/SubscriptionList.jsx";
+const NotFound = () => <h1>Page not found</h1>;
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+const App = () => {
+	// const { user, login, logout } = useAuth();
+	// const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-export default App
+	// useEffect(() => {
+	// 	setIsLoggedIn(!!user); // Update login state based on the presence of the user
+	// }, [user]);
+
+	// Function to handle private routes
+	// const PrivateRoute = ({ children }) => {
+	// 	return isLoggedIn ? children : <Navigate to="/login" replace />;
+	// };
+	// console.log(isLoggedIn);
+
+	return (
+		<Router>
+			<NavBar />
+			<div className="container mx-auto mt-8">
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/register" element={<Register />} />
+					<Route path="/dashboard" element={<Dashboard />} />
+					<Route path="/plans" element={<Plans />} />
+					<Route path="/plans/:planId" element={<PlanDetail />} />
+					<Route path="/profile" element={<Profile />} />
+					<Route path="/subscription-list" element={<SubscriptionList />} />
+					<Route path="/create-plan" element={<PlanForm />} />
+					<Route path="*" element={<NotFound />} />
+				</Routes>
+			</div>
+		</Router>
+	);
+};
+
+export default App;

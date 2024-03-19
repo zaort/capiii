@@ -3,11 +3,31 @@ const { signToken, AuthenticationError } = require("../utils/authentication.js")
 const resolvers = {
 	Query: {
 		me: async (parent, args, context) => {
-			if (context.user) {
-				const userData = await User.findOne({ _id: context.user._id }).select("-__v -password");
-				return userData;
+			try {
+				if (context.user) {
+					const userData = await User.findOne({ _id: context.user._id })
+						.select("-__v -password")
+						.populate("subscribedPlans createdPlans");
+					return userData;
+				}
+				return null;
+			} catch (e) {
+				console.log(e);
 			}
-			return null;
+		},
+		posts: async (parent, { username }) => {
+			const params = username ? { username } : {};
+			return Post.find(params).sort({ createdAt: -1 });
+		},
+		post: async (parent, { postId }) => {
+			return Post.findOne({ postId });
+		},
+		plans: async () => {
+			return Plan.find({}).sort({ createdAt: -1 });
+		},
+		plan: async (parent, { planId }) => {
+			return Plan.findOne({ _id: planId });
+			
 		},
 	},
 	Mutation: {
@@ -26,7 +46,7 @@ const resolvers = {
 					throw AuthenticationError;
 				}
 				const token = signToken(user);
-				// console.log(token);   // token used for testing
+				// console.log(token); // token used for testing
 				return { token, user };
 			} catch (err) {
 				console.log(err);
@@ -47,7 +67,6 @@ const resolvers = {
 		},
 		createPlan: async (parent, { planData: { name, description, price } }, context) => {
 			try {
-				// console.log("context.user", context.user);
 				if (!context.user) {
 					throw new Error("No authenticated user");
 				}
@@ -95,15 +114,21 @@ const resolvers = {
 			}
 		},
 		subscribePlan: async (parent, { planData }, context) => {
-			// console.log("context.user -----", context.user);
-			// console.log("planData ------", planData);
-
 			if (context.user) {
 				const user = await User.findById(context.user._id);
-				// console.log("user -----", user);
 
 				if (user.isProvider) {
 					throw new Error("Providers cannot subscribe or unsubscribe to plans");
+				}
+
+				const plan = await Plan.findById(planData.planId);
+
+				if (!plan) {
+					throw new Error(`Plan with ID ${planData.planId} not found`);
+				}
+
+				if (user.subscribedPlans.includes(planData.planId)) {
+					throw new Error("User is already subscribed to this plan");
 				}
 
 				const updatedUser = await User.findOneAndUpdate(
@@ -111,14 +136,12 @@ const resolvers = {
 					{ $addToSet: { subscribedPlans: planData.planId } },
 					{ new: true }
 				).populate("subscribedPlans");
-				// console.log("updatedUser -------", updatedUser);
 
 				const updatedPlan = await Plan.findOneAndUpdate(
 					{ _id: planData.planId },
 					{ $addToSet: { subscribers: context.user._id } },
 					{ new: true }
 				);
-				// console.log("updatedPlan -------", updatedPlan);
 
 				return updatedUser;
 			} else {
@@ -128,19 +151,27 @@ const resolvers = {
 		unsubscribePlan: async (parent, { planId }, context) => {
 			if (context.user) {
 				const user = await User.findById(context.user._id);
+
 				if (user.isProvider) {
 					throw new Error("Providers cannot subscribe or unsubscribe to plans");
 				}
+
+				if (!user.subscribedPlans.includes(planId)) {
+					throw new Error("User is not subscribed to this plan");
+				}
+
 				const updatedUser = await User.findOneAndUpdate(
 					{ _id: context.user._id },
 					{ $pull: { subscribedPlans: planId } },
 					{ new: true }
 				).populate("subscribedPlans");
+
 				const updatedPlan = await Plan.findOneAndUpdate(
 					{ _id: planId },
 					{ $pull: { subscribers: context.user._id } },
 					{ new: true }
 				);
+
 				return updatedUser;
 			}
 		},
